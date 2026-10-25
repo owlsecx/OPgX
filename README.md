@@ -18,23 +18,18 @@
 
 ## 📌 Overview
 
-Offline PostgreSQL configuration & pg_hba auditor
+OPgX is an offline, read-only auditor for PostgreSQL configuration and host-based authentication. It parses postgresql.conf, pg_hba.conf, pg_ident.conf and ALTER SYSTEM overrides, resolving effective settings with correct last-wins and include semantics. Findings are mapped to CIS, CWE and MITRE ATT&CK references.
 
 ---
 
 ## ✨ Features
 
-- Faithful postgresql.conf grammar — `name = value`, quoted values with '' escapes, units, include, include_if_exists, include_dir, last-wins semantics
-- postgresql.auto.conf (ALTER SYSTEM) override layer
-- pg_hba.conf parser — quoted tokens, @file lists, CIDR + netmask, hostssl/hostnossl/hostgssenc, options, line continuation, PG16 include directives
-- pg_ident.conf parser — regex & wildcard mappings
-- Rule engine: listen_addresses vs TLS, ssl off, weak ssl_min_protocol_version / ciphers, md5 password_encryption, trust/password/md5 remote, 0.0.0.0/0 & ::/0, replication without scram+hostssl, local trust, shadowed rules, logging & pgAudit gaps
-- Data directory / key / config permission hints
-- CIS PostgreSQL Benchmark + CWE + MITRE ATT&CK map
-- Weighted A+…F grade, severity filters, --fail-on
-- Exports TXT / MD / JSON / CSV / SARIF 2.1.0
-- Offline --root mode for mounted images / backups
-- Built-in self-test demo (exit 3 on missed rule)
+- Faithful postgresql.conf parser with units, includes and last-wins semantics
+- pg_hba.conf and pg_ident.conf parsing, including PG16 include directives
+- Rule engine for TLS, authentication methods, listen addresses and replication exposure
+- postgresql.auto.conf override handling and data-directory permission hints
+- CIS PostgreSQL Benchmark, CWE and MITRE ATT&CK mapping
+- Export formats (json/sarif/md/csv), rule catalogue and hardened template output
 
 ---
 
@@ -48,7 +43,10 @@ Offline PostgreSQL configuration & pg_hba auditor
 ## 🚀 Usage
 
 ```bash
-./OPgX
+./OPgX -c /etc/postgresql/16/main/postgresql.conf --hba /etc/postgresql/16/main/pg_hba.conf
+./OPgX --scan --root /mnt/collected --json -o report.json
+./OPgX -c postgresql.conf --fail-on high
+./OPgX --help
 ```
 
 ---
